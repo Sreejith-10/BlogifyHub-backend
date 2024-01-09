@@ -22,6 +22,14 @@ const addUser = async (req, res) => {
 	}
 };
 
+const getSingleUser = async (req, res) => {
+	const id = req.params.id;
+	console.log(id);
+
+	res.json("succes");
+};
+
 module.exports = {
 	addUser,
+	getSingleUser,
 };
