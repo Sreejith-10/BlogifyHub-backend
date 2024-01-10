@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/authRoute");
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
+const commentRoute = require("./routes/commentRoute");
 
 const app = express();
 
@@ -32,6 +33,7 @@ mongoose
 app.use("/", authRoute);
 app.use("/user", userRoute);
 app.use("/post", postRoute);
+app.use("/comment", commentRoute);
 
 app.listen(3001, () => {
 	console.log("Server started");

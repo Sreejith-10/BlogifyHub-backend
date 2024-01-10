@@ -25,7 +25,7 @@ const registerUser = async (req, res) => {
 			});
 		//hashing password
 		const hashedPass = await hashPassword(password);
-		const user = AuthModel.create({name, email, password: hashedPass});
+		const user = await AuthModel.create({name, email, password: hashedPass});
 		return res.json(user);
 	} catch (err) {
 		console.log(err);

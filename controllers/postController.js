@@ -9,6 +9,7 @@ const addPost = async (req, res) => {
 		postTags: tag,
 		postImage: f,
 		userId,
+		postDate: new Date().toLocaleString(),
 	});
 	postResult
 		? res.json("Succerfully posted")
@@ -25,7 +26,61 @@ const getPost = async (req, res) => {
 	}
 };
 
+const getUserPost = async (req, res) => {
+	const id = req.body.id;
+	const userPost = await PostModel.find({userId: id});
+	if (!userPost) return res.json("No post found");
+	return res.json(userPost);
+};
+
+const deletePost = async (req, res) => {
+	try {
+		const id = req.params.id;
+		const data = await PostModel.findOneAndDelete({_id: id});
+		if (data) return res.json(data);
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const updatePost = async (req, res) => {
+	const fileUpload = req.file;
+	const result = await PostModel.findByIdAndUpdate(req.body.postId, {
+		postTitle: req.body.postTitle,
+		postDescription: req.body.postDescription,
+		postTags: req.body.tag,
+		postImage: req.body.postImage ? req.body.postImage : fileUpload.filename,
+		userId: req.body.userId,
+		postDate: new Date().toLocaleString(),
+	});
+	if (result) return res.json("Updated");
+};
+
+const updateLikecount = async (req, res) => {
+	const {userId, postId} = req.body;
+	const post = await PostModel.findOneAndUpdate(
+		{_id: postId},
+		{postLikes: userId}
+	);
+	if (post) return res.json(post);
+	return res.json({error: "Something went wrong"});
+};
+
+const reduceLikeCount = async (req, res) => {
+	const {userId, postId} = req.body;
+	const post = await PostModel.findOne({_id: postId});
+	post.postLikes.pop(userId);
+	post.save();
+	if (post) return res.json(post);
+	return res.json({error: "Something went wrong"});
+};
+
 module.exports = {
 	addPost,
 	getPost,
+	getUserPost,
+	deletePost,
+	updatePost,
+	updateLikecount,
+	reduceLikeCount,
 };
