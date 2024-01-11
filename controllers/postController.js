@@ -75,6 +75,23 @@ const reduceLikeCount = async (req, res) => {
 	return res.json({error: "Something went wrong"});
 };
 
+const getPostCount = async (req, res) => {
+	const id = req.params.id;
+	const result = await PostModel.find({userId: id});
+	const count = result.length;
+	return res.json(count);
+};
+
+const getLikeCount = async (req, res) => {
+	const id = req.params.id;
+	const result = await PostModel.find({userId: id});
+	let likes = 0;
+	for (postLikes in result) {
+		likes = postLikes.length + likes;
+	}
+	res.json(likes);
+};
+
 module.exports = {
 	addPost,
 	getPost,
@@ -83,4 +100,6 @@ module.exports = {
 	updatePost,
 	updateLikecount,
 	reduceLikeCount,
+	getPostCount,
+	getLikeCount,
 };

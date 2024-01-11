@@ -22,9 +22,7 @@ const addUser = async (req, res) => {
 const getSingleUser = async (req, res) => {
 	try {
 		const id = req.params.id;
-		console.log(id);
 		const user = await UserModel.findOne({userId: id});
-		console.log(user);
 		if (user) return res.json(user);
 	} catch (err) {
 		console.log(err);

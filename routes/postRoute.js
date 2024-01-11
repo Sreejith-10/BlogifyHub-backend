@@ -7,17 +7,21 @@ const {
 	updatePost,
 	updateLikecount,
 	reduceLikeCount,
+	getPostCount,
+	getLikeCount,
 } = require("../controllers/postController");
 const upload = require("../middleware/multer");
 
 const router = express.Router();
 
-router.post("/add-post", upload.single("postImage"), addPost);
 router.get("/get-post", getPost);
+router.get("/get-post-count/:id", getPostCount);
+router.get("/get-like-count/:id", getLikeCount);
+router.post("/add-post", upload.single("postImage"), addPost);
 router.post("/get-user-post", getUserPost);
-router.delete("/delete-post/:id", deletePost);
-router.patch("/update-post", upload.single("postImage"), updatePost);
 router.post("/like-post", updateLikecount);
 router.post("/dislike-post", reduceLikeCount);
+router.patch("/update-post", upload.single("postImage"), updatePost);
+router.delete("/delete-post/:id", deletePost);
 
 module.exports = router;

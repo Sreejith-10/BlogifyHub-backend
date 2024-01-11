@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
 			type: Number,
 			required: true,
 		},
+		followers: [String],
 		verified: {
 			type: Boolean,
 			default: false,
