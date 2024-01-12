@@ -1,4 +1,3 @@
-const AuthModel = require("../models/authModel");
 const UserModel = require("../models/userModel");
 
 const addUser = async (req, res) => {
@@ -29,7 +28,44 @@ const getSingleUser = async (req, res) => {
 	}
 };
 
+const followUser = async (req, res) => {
+	const {authorId, userId} = req.body;
+	const result = await UserModel.findOne({userId: authorId});
+	result.followers.push(userId);
+	result.save();
+	res.json(result);
+};
+
+const unFollowUser = async (req, res) => {
+	const {authorId, userId} = req.body;
+	const result = await UserModel.findOneAndUpdate(
+		{userId: authorId},
+		{$pull: {followers: userId}}
+	);
+	result.save();
+	res.json(result);
+};
+
+const updateUserAccount = async (req, res) => {
+	const file = req.file;
+	const {fname, lname, age, profession} = req.body;
+	if (file) {
+		await UserModel.findOneAndUpdate(
+			{userId: req.body.userId},
+			{profileImg: file.filename}
+		);
+	}
+	const db = await UserModel.findOneAndUpdate(
+		{userId: req.body.userId},
+		{fname, lname, age, profession}
+	);
+	return res.json("Prfile updated");
+};
+
 module.exports = {
 	addUser,
 	getSingleUser,
+	followUser,
+	unFollowUser,
+	updateUserAccount,
 };
