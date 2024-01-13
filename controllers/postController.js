@@ -68,11 +68,14 @@ const updateLikecount = async (req, res) => {
 
 const reduceLikeCount = async (req, res) => {
 	const {userId, postId} = req.body;
-	const post = await PostModel.findOne({_id: postId});
-	post.postLikes.pop(userId);
-	post.save();
-	if (post) return res.json(post);
-	return res.json({error: "Something went wrong"});
+	const post = await PostModel.findByIdAndUpdate(postId, {
+		$pull: {postLikes: userId},
+	});
+	// post.postLikes.filter((item) => item != userId);
+	// console.log(post);
+	// post.save();
+	if (!post) return res.json({error: "Something went wrong"});
+	return res.json(post);
 };
 
 const getPostCount = async (req, res) => {
