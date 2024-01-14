@@ -66,7 +66,7 @@ const updateLikecount = async (req, res) => {
 		{postLikes: userId}
 	);
 	if (post) {
-		setNotifications({postId, senderId: userId, type: "like"});
+		setNotifications({postId, senderId: userId, notificationType: "like"});
 		return res.json(post);
 	}
 	return res.json({error: "Something went wrong"});
