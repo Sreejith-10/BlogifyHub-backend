@@ -8,6 +8,8 @@ const authRoute = require("./routes/authRoute");
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
 const commentRoute = require("./routes/commentRoute");
+const tagRoute = require("./routes/tagRoute");
+const notificationRoute = require("./routes/notificationRoute");
 
 const app = express();
 
@@ -34,6 +36,8 @@ app.use("/", authRoute);
 app.use("/user", userRoute);
 app.use("/post", postRoute);
 app.use("/comment", commentRoute);
+app.use("/tag", tagRoute);
+app.use("/notification", notificationRoute);
 
 app.listen(3001, () => {
 	console.log("Server started");

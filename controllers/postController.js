@@ -1,4 +1,6 @@
 const PostModel = require("../models/postModel");
+const TagModel = require("../models/tagModel");
+const {setNotifications} = require("./notificationController");
 
 const addPost = async (req, res) => {
 	const f = req.file.filename;
@@ -11,6 +13,7 @@ const addPost = async (req, res) => {
 		userId,
 		postDate: new Date().toLocaleString(),
 	});
+	await TagModel.insertMany({tagArray: tag});
 	postResult
 		? res.json("Succerfully posted")
 		: res.json({error: "Something went wrong"});
@@ -62,7 +65,10 @@ const updateLikecount = async (req, res) => {
 		{_id: postId},
 		{postLikes: userId}
 	);
-	if (post) return res.json(post);
+	if (post) {
+		setNotifications({postId, senderId: userId, type: "like"});
+		return res.json(post);
+	}
 	return res.json({error: "Something went wrong"});
 };
 
@@ -71,9 +77,6 @@ const reduceLikeCount = async (req, res) => {
 	const post = await PostModel.findByIdAndUpdate(postId, {
 		$pull: {postLikes: userId},
 	});
-	// post.postLikes.filter((item) => item != userId);
-	// console.log(post);
-	// post.save();
 	if (!post) return res.json({error: "Something went wrong"});
 	return res.json(post);
 };
