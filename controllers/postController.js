@@ -1,6 +1,7 @@
+const alertUserLike = require("..");
 const PostModel = require("../models/postModel");
 const TagModel = require("../models/tagModel");
-const {setNotifications} = require("./notificationController");
+const UserModel = require("../models/userModel");
 
 const addPost = async (req, res) => {
 	const f = req.file.filename;
@@ -61,12 +62,13 @@ const updatePost = async (req, res) => {
 
 const updateLikecount = async (req, res) => {
 	const {userId, postId} = req.body;
-	const post = await PostModel.findOneAndUpdate(
-		{_id: postId},
-		{postLikes: userId}
-	);
+	const post = await PostModel.findById(postId);
+	post.postLikes.push(userId);
+	post.save();
+	const author = await PostModel.findById(postId);
+	const user = await UserModel.findOne({userId});
 	if (post) {
-		setNotifications({postId, senderId: userId, notificationType: "like"});
+		// setNotifications({postId, senderId: userId, notificationType: "like"});
 		return res.json(post);
 	}
 	return res.json({error: "Something went wrong"});
@@ -74,9 +76,10 @@ const updateLikecount = async (req, res) => {
 
 const reduceLikeCount = async (req, res) => {
 	const {userId, postId} = req.body;
-	const post = await PostModel.findByIdAndUpdate(postId, {
-		$pull: {postLikes: userId},
-	});
+	const post = await PostModel.findById(postId);
+	const like = post.postLikes;
+	post.postLikes = like.filter((item) => item != userId);
+	post.save();
 	if (!post) return res.json({error: "Something went wrong"});
 	return res.json(post);
 };

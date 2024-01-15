@@ -3,6 +3,8 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const cookieParser = require("cookie-parser");
+const {createServer} = require("http");
+const {Server} = require("socket.io");
 
 const authRoute = require("./routes/authRoute");
 const userRoute = require("./routes/userRoute");
@@ -12,6 +14,13 @@ const tagRoute = require("./routes/tagRoute");
 const notificationRoute = require("./routes/notificationRoute");
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+	cors: {
+		origin: "http://localhost:5173",
+		methods: ["GET", "POST"],
+	},
+});
 
 //middleware
 app.use(
@@ -31,6 +40,25 @@ mongoose
 	.then(() => console.log("connected to db"))
 	.catch((err) => console.log(err));
 
+//socket.io
+io.on("connection", (socket) => {
+	console.log("user connect");
+
+	socket.on("disconnet", () => {
+		console.log("user disconnet");
+	});
+
+	socket.on("join_room", (authorId) => {
+		socket.join(authorId);
+	});
+	socket.on("leave-room", (authorId) => {
+		socket.leave(authorId);
+	});
+	socket.on("like_post", (authorId) => {
+		io.to(authorId).emit("notify", "Someone likes your post");
+	});
+});
+
 //route
 app.use("/", authRoute);
 app.use("/user", userRoute);
@@ -39,6 +67,6 @@ app.use("/comment", commentRoute);
 app.use("/tag", tagRoute);
 app.use("/notification", notificationRoute);
 
-app.listen(3001, () => {
+server.listen(3001, () => {
 	console.log("Server started");
 });

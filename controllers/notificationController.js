@@ -44,9 +44,9 @@ const setNotifications = async (req, res) => {
 
 const getNotificatons = async (req, res) => {
 	const id = req.params.id;
-    console.log(id);
+	console.log(id);
 	const notifi = await NotificationModel.findOne({authorId: id});
-    console.log(notifi);
+	console.log(notifi);
 };
 
 module.exports = {
