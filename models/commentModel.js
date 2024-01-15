@@ -8,26 +8,27 @@ const commentSchema = new mongoose.Schema(
 		},
 		postId: {
 			type: String,
-			unique: true,
 		},
-		senderId: {
-			type: String,
-			unique: true,
-		},
-		senderMessage: String,
-		time: String,
-		replies: [
+		comment: [
 			{
-				author: {
-					type: Boolean,
-					default: false,
-				},
-				replierId: {
+				senderId: {
 					type: String,
-					unique: true,
 				},
-				replierMessage: String,
+				senderMessage: String,
 				time: String,
+				replies: [
+					{
+						author: {
+							type: Boolean,
+							default: false,
+						},
+						replierId: {
+							type: String,
+						},
+						replierMessage: String,
+						time: String,
+					},
+				],
 			},
 		],
 	},
