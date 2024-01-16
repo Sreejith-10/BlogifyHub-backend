@@ -58,6 +58,8 @@ const deleteComment = async (req, res) => {
 	}
 };
 
+const editComment = async (req, res) => {};
+
 const replyToComment = async (req, res) => {
 	const {reply, commentId, postId, currentUser} = req.body;
 	const comment = await CommentModel.findOneAndUpdate(
@@ -102,10 +104,14 @@ const deleteReply = async (req, res) => {
 	}
 };
 
+const editReply = async (req, res) => {};
+
 module.exports = {
 	addComment,
 	getAllComment,
 	deleteComment,
 	replyToComment,
 	deleteReply,
+	editComment,
+	editReply,
 };
