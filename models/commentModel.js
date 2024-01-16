@@ -15,7 +15,7 @@ const commentSchema = new mongoose.Schema(
 					type: String,
 				},
 				senderMessage: String,
-				time: String,
+				time: Date,
 				replies: [
 					{
 						author: {
@@ -26,7 +26,7 @@ const commentSchema = new mongoose.Schema(
 							type: String,
 						},
 						replierMessage: String,
-						time: String,
+						time: Date,
 					},
 				],
 			},

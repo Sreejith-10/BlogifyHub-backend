@@ -4,7 +4,6 @@ const CommentModel = require("../models/commentModel");
 const getAllComment = async (req, res) => {
 	const postId = req.params.id;
 	const response = await CommentModel.findOne({postId: postId});
-	console.log(response);
 	if (!response) return res.json({error: "No comments found"});
 	return res.json(response);
 };
@@ -47,29 +46,66 @@ const addComment = async (req, res) => {
 	}
 };
 
-const replyToComment = async (req, res) => {
-	const {reply, commentId, currentUser} = req.body;
-	const result = await CommentModel.findByIdAndUpdate(commentId, {
-		$push: {
-			replies: {
-				replierId: currentUser,
-				replierMessage: reply,
-				time: new Date().toLocaleString(),
-			},
-		},
-	});
-	return res.json(result);
+const deleteComment = async (req, res) => {
+	try {
+		const {postId, commenterId} = req.body;
+		const comment = await CommentModel.findOne({postId});
+		comment.comment.pull({_id: commenterId});
+		comment.save();
+		return res.json(comment);
+	} catch (err) {
+		console.log(err);
+	}
 };
 
-const deleteComment = async (req, res) => {
-	const {userId, authorId} = req.body;
-	const comment = await CommentModel.findOne({senderId: userId});
-	console.log(comment);
+const replyToComment = async (req, res) => {
+	const {reply, commentId, postId, currentUser} = req.body;
+	const comment = await CommentModel.findOneAndUpdate(
+		{
+			postId,
+			"comment._id": commentId,
+		},
+		{
+			$push: {
+				"comment.$.replies": {
+					replierId: currentUser,
+					replierMessage: reply,
+					time: new Date(),
+				},
+			},
+		},
+		{
+			new: true,
+		}
+	);
+	return res.json(comment);
+};
+
+const deleteReply = async (req, res) => {
+	try {
+		const {postId, commenterId, replierId, id} = req.body;
+		const result = await CommentModel.findOneAndUpdate(
+			{
+				postId,
+				"comment._id": id,
+			},
+			{
+				$pull: {"comment.$.replies": {_id: commenterId}},
+			},
+			{
+				new: true,
+			}
+		);
+		return res.json(result);
+	} catch (err) {
+		console.log(err);
+	}
 };
 
 module.exports = {
 	addComment,
 	getAllComment,
-	replyToComment,
 	deleteComment,
+	replyToComment,
+	deleteReply,
 };
