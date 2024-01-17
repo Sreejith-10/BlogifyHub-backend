@@ -58,7 +58,20 @@ const deleteComment = async (req, res) => {
 	}
 };
 
-const editComment = async (req, res) => {};
+const editComment = async (req, res) => {
+	const {postId, commentId, editText} = req.body;
+	const resp = await CommentModel.findOneAndUpdate(
+		{
+			postId,
+			"comment._id": commentId,
+		},
+		{
+			$set: {"comment.$.senderMessage": editText},
+		}
+	);
+	const result = await CommentModel.findOne({postId});
+	res.json(result);
+};
 
 const replyToComment = async (req, res) => {
 	const {reply, commentId, postId, currentUser} = req.body;

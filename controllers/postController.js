@@ -12,7 +12,7 @@ const addPost = async (req, res) => {
 		postTags: tag,
 		postImage: f,
 		userId,
-		postDate: new Date().toLocaleString(),
+		postDate: new Date(),
 	});
 	await TagModel.insertMany({tagArray: tag});
 	postResult
@@ -55,7 +55,7 @@ const updatePost = async (req, res) => {
 		postTags: req.body.tag,
 		postImage: req.body.postImage ? req.body.postImage : fileUpload.filename,
 		userId: req.body.userId,
-		postDate: new Date().toLocaleString(),
+		postDate: new Date(),
 	});
 	if (result) return res.json("Updated");
 };
