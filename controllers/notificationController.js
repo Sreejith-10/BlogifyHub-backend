@@ -14,6 +14,10 @@ const setNotifications = async (req, res) => {
 		//checking type of notifcation to sent
 		if (notificationType === "like") {
 			message = `${sender.fname}  ${sender.lname} liked your post`;
+		} else if (notificationType === "comment") {
+			message = `${sender.fname} ${sender.lname} commented on your post`;
+		} else if (notificationType === "reply") {
+			message = `${sender.fname} ${sender.lname} replied to your comment`;
 		}
 
 		//checking if user already in notifications collection

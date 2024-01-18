@@ -1,5 +1,5 @@
-const {findOneAndUpdate} = require("../models/authModel");
 const CommentModel = require("../models/commentModel");
+const {setNotifications} = require("./notificationController");
 
 const getAllComment = async (req, res) => {
 	const postId = req.params.id;
@@ -11,15 +11,8 @@ const getAllComment = async (req, res) => {
 const addComment = async (req, res) => {
 	try {
 		const {userId, postId, message} = req.body;
-		// const result = await CommentModel.create({
-		// 	senderId: userId,
-		// 	postId: postId,
-		// 	senderMessage: message,
-		// 	time: new Date().toLocaleString(),
-		// });
-		// if (!result) return res.json({error: "Error try again"});
-		// return res.json(result);
 		const result = await CommentModel.findOne({postId});
+		setNotifications({postId, senderId: userId, notificationType: "comment"});
 		if (!result) {
 			const createDb = await CommentModel.create({
 				postId,
@@ -93,6 +86,11 @@ const replyToComment = async (req, res) => {
 			new: true,
 		}
 	);
+	setNotifications({
+		commentId,
+		senderId: currentUser,
+		notificationType: "reply",
+	});
 	return res.json(comment);
 };
 
@@ -117,7 +115,31 @@ const deleteReply = async (req, res) => {
 	}
 };
 
-const editReply = async (req, res) => {};
+const editReply = async (req, res) => {
+	console.log(req.body);
+	try {
+		const {postId, replyId, editText, postRef} = req.body;
+		const result = await CommentModel.findOneAndUpdate(
+			{postId: postId, "comment._id": postRef, "comment.replies._id": replyId},
+			{
+				$set: {
+					"comment.$.replies.$[elem].replierMessage": editText,
+				},
+			},
+			{
+				arrayFilters: [
+					{
+						"elem._id": replyId,
+					},
+				],
+			}
+		);
+		const comment = await CommentModel.findOne({postId});
+		res.json(comment);
+	} catch (err) {
+		console.log(err);
+	}
+};
 
 module.exports = {
 	addComment,
