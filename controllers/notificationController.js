@@ -4,39 +4,34 @@ const UserModel = require("../models/userModel");
 
 const setNotifications = async (req, res) => {
 	try {
-		const {postId, senderId, notificationType} = req;
-		let message = "";
-
-		const post = await PostModel.findById(postId);
-		const authorId = post.userId;
-		const sender = await UserModel.findOne({userId: senderId});
-
-		//checking type of notifcation to sent
-		if (notificationType === "like") {
-			message = `${sender.fname}  ${sender.lname} liked your post`;
-		} else if (notificationType === "comment") {
-			message = `${sender.fname} ${sender.lname} commented on your post`;
-		} else if (notificationType === "reply") {
-			message = `${sender.fname} ${sender.lname} replied to your comment`;
+		const {postId, userId, method} = req;
+		const authorId =
+			method === "reply" ? postId : await PostModel.findOne({_id: postId});
+		const user = await UserModel.findOne({userId});
+		let Notification = "";
+		if (method === "like") {
+			Notification = `${user.fname} ${user.lname} liked your post`;
+		} else if (method === "comment") {
+			Notification = `${user.fname} ${user.lname} commented on your post`;
+		} else if (method === "reply") {
+			Notification = `${user.fname} ${user.lname} replied to your comment`;
 		}
-
-		//checking if user already in notifications collection
-		const result = await NotificationModel.findOne({authorId: authorId});
+		const result = await NotificationModel.findOne({authorId});
 		if (!result) {
-			const newResult = await NotificationModel.create({
-				authorId,
+			await NotificationModel.create({
+				authorId: method === "reply" ? authorId : authorId.userId,
 				notifications: {
-					notificationType,
-					senderId,
-					message,
+					notificationType: method,
+					senderId: user.userId,
+					message: Notification,
 					date: new Date(),
 				},
 			});
 		} else {
 			result.notifications.push({
-				notificationType,
-				senderId,
-				message,
+				notificationType: method,
+				senderId: user.userId,
+				message: Notification,
 				date: new Date(),
 			});
 			await result.save();
@@ -48,10 +43,12 @@ const setNotifications = async (req, res) => {
 
 const getNotificatons = async (req, res) => {
 	const id = req.params.id;
-	console.log(id);
 	const notifi = await NotificationModel.findOne({authorId: id});
-	console.log(notifi);
+	if (!notifi) return res.json({error: "something went wrong"});
+	return res.json(notifi);
 };
+
+// 659e64fc1e64ed5727bcd553
 
 module.exports = {
 	setNotifications,

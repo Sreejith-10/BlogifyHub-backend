@@ -12,7 +12,6 @@ const addComment = async (req, res) => {
 	try {
 		const {userId, postId, message} = req.body;
 		const result = await CommentModel.findOne({postId});
-		setNotifications({postId, senderId: userId, notificationType: "comment"});
 		if (!result) {
 			const createDb = await CommentModel.create({
 				postId,
@@ -32,6 +31,7 @@ const addComment = async (req, res) => {
 			});
 			result.save();
 			if (!result) return res.json({error: "Error try again"});
+			setNotifications({postId, userId, method: "comment"});
 			return res.json(result);
 		}
 	} catch (err) {
@@ -67,31 +67,31 @@ const editComment = async (req, res) => {
 };
 
 const replyToComment = async (req, res) => {
-	const {reply, commentId, postId, currentUser} = req.body;
-	const comment = await CommentModel.findOneAndUpdate(
-		{
-			postId,
-			"comment._id": commentId,
-		},
-		{
-			$push: {
-				"comment.$.replies": {
-					replierId: currentUser,
-					replierMessage: reply,
-					time: new Date(),
-				},
-			},
-		},
-		{
-			new: true,
-		}
-	);
+	const {reply, commentId, postId, currentUser, commentUser} = req.body;
+	// const comment = await CommentModel.findOneAndUpdate(
+	// 	{
+	// 		postId,
+	// 		"comment._id": commentId,
+	// 	},
+	// 	{
+	// 		$push: {
+	// 			"comment.$.replies": {
+	// 				replierId: currentUser,
+	// 				replierMessage: reply,
+	// 				time: new Date(),
+	// 			},
+	// 		},
+	// 	},
+	// 	{
+	// 		new: true,
+	// 	}
+	// );
 	setNotifications({
-		commentId,
-		senderId: currentUser,
-		notificationType: "reply",
+		postId: commentUser,
+		userId: currentUser,
+		method: "reply",
 	});
-	return res.json(comment);
+	// return res.json(comment);
 };
 
 const deleteReply = async (req, res) => {

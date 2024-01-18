@@ -2,6 +2,7 @@ const alertUserLike = require("..");
 const PostModel = require("../models/postModel");
 const TagModel = require("../models/tagModel");
 const UserModel = require("../models/userModel");
+const {setNotifications} = require("./notificationController");
 
 const addPost = async (req, res) => {
 	const f = req.file.filename;
@@ -68,7 +69,7 @@ const updateLikecount = async (req, res) => {
 	const author = await PostModel.findById(postId);
 	const user = await UserModel.findOne({userId});
 	if (post) {
-		// setNotifications({postId, senderId: userId, notificationType: "like"});
+		setNotifications({postId, userId, method: "like"});
 		return res.json(post);
 	}
 	return res.json({error: "Something went wrong"});
