@@ -68,30 +68,30 @@ const editComment = async (req, res) => {
 
 const replyToComment = async (req, res) => {
 	const {reply, commentId, postId, currentUser, commentUser} = req.body;
-	// const comment = await CommentModel.findOneAndUpdate(
-	// 	{
-	// 		postId,
-	// 		"comment._id": commentId,
-	// 	},
-	// 	{
-	// 		$push: {
-	// 			"comment.$.replies": {
-	// 				replierId: currentUser,
-	// 				replierMessage: reply,
-	// 				time: new Date(),
-	// 			},
-	// 		},
-	// 	},
-	// 	{
-	// 		new: true,
-	// 	}
-	// );
+	const comment = await CommentModel.findOneAndUpdate(
+		{
+			postId,
+			"comment._id": commentId,
+		},
+		{
+			$push: {
+				"comment.$.replies": {
+					replierId: currentUser,
+					replierMessage: reply,
+					time: new Date(),
+				},
+			},
+		},
+		{
+			new: true,
+		}
+	);
 	setNotifications({
 		postId: commentUser,
 		userId: currentUser,
 		method: "reply",
 	});
-	// return res.json(comment);
+	return res.json(comment);
 };
 
 const deleteReply = async (req, res) => {
