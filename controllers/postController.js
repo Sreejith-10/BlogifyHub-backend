@@ -1,4 +1,5 @@
 const alertUserLike = require("..");
+const CommentModel = require("../models/commentModel");
 const PostModel = require("../models/postModel");
 const TagModel = require("../models/tagModel");
 const UserModel = require("../models/userModel");
@@ -102,6 +103,32 @@ const getLikeCount = async (req, res) => {
 	res.json(likes);
 };
 
+const addViewer = async (req, res) => {
+	const {currentUser, postId} = req.body;
+	const post = await PostModel.findById(postId);
+	const found = post.postViews.includes(currentUser);
+	if (!found) {
+		post.postViews.push(currentUser);
+		post.save();
+		return res.json("success");
+	}
+};
+
+const getPostById = async (req, res) => {
+	try {
+		const postId = req.params.id;
+		if (postId != undefined) {
+			const post = await PostModel.findOne({_id: postId});
+			const user = await UserModel.findOne({userId: post.userId});
+			const comment = await CommentModel.findOne({postId});
+			if (!post) return res.json({error: "No post found with this id"});
+			return res.json({post, user, comment});
+		}
+	} catch (err) {
+		console.log(err);
+	}
+};
+
 module.exports = {
 	addPost,
 	getPost,
@@ -112,4 +139,6 @@ module.exports = {
 	reduceLikeCount,
 	getPostCount,
 	getLikeCount,
+	addViewer,
+	getPostById,
 };

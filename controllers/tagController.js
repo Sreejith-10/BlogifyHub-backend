@@ -12,6 +12,36 @@ const getAllTags = async (req, res) => {
 	}
 };
 
+const getTrendingTags = async (req, res) => {
+	try {
+		t = await TagModel.aggregate([
+			{
+				$unwind: "$tagArray",
+			},
+			{
+				$group: {
+					_id: "$tagArray",
+					count: {
+						$sum: 1,
+					},
+				},
+			},
+			{
+				$sort: {
+					count: -1,
+				},
+			},
+			{
+				$limit: 10,
+			},
+		]);
+		res.json(t);
+	} catch (err) {
+		console.log(err);
+	}
+};
+
 module.exports = {
 	getAllTags,
+	getTrendingTags,
 };
