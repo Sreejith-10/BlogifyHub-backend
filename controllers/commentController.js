@@ -52,46 +52,54 @@ const deleteComment = async (req, res) => {
 };
 
 const editComment = async (req, res) => {
-	const {postId, commentId, editText} = req.body;
-	const resp = await CommentModel.findOneAndUpdate(
-		{
-			postId,
-			"comment._id": commentId,
-		},
-		{
-			$set: {"comment.$.senderMessage": editText},
-		}
-	);
-	const result = await CommentModel.findOne({postId});
-	res.json(result);
+	try {
+		const {postId, commentId, editText} = req.body;
+		const resp = await CommentModel.findOneAndUpdate(
+			{
+				postId,
+				"comment._id": commentId,
+			},
+			{
+				$set: {"comment.$.senderMessage": editText},
+			}
+		);
+		const result = await CommentModel.findOne({postId});
+		res.json(result);
+	} catch (err) {
+		console.log(err);
+	}
 };
 
 const replyToComment = async (req, res) => {
-	const {reply, commentId, postId, currentUser, commentUser} = req.body;
-	const comment = await CommentModel.findOneAndUpdate(
-		{
-			postId,
-			"comment._id": commentId,
-		},
-		{
-			$push: {
-				"comment.$.replies": {
-					replierId: currentUser,
-					replierMessage: reply,
-					time: new Date(),
+	try {
+		const {reply, commentId, postId, currentUser, commentUser} = req.body;
+		const comment = await CommentModel.findOneAndUpdate(
+			{
+				postId,
+				"comment._id": commentId,
+			},
+			{
+				$push: {
+					"comment.$.replies": {
+						replierId: currentUser,
+						replierMessage: reply,
+						time: new Date(),
+					},
 				},
 			},
-		},
-		{
-			new: true,
-		}
-	);
-	setNotifications({
-		postId: commentUser,
-		userId: currentUser,
-		method: "reply",
-	});
-	return res.json(comment);
+			{
+				new: true,
+			}
+		);
+		setNotifications({
+			postId: commentUser,
+			userId: currentUser,
+			method: "reply",
+		});
+		return res.json(comment);
+	} catch (err) {
+		console.log(err);
+	}
 };
 
 const deleteReply = async (req, res) => {
@@ -116,7 +124,6 @@ const deleteReply = async (req, res) => {
 };
 
 const editReply = async (req, res) => {
-	console.log(req.body);
 	try {
 		const {postId, replyId, editText, postRef} = req.body;
 		const result = await CommentModel.findOneAndUpdate(

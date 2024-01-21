@@ -64,14 +64,18 @@ const logInUser = async (req, res) => {
 
 //fetching user data
 const getProfile = (req, res) => {
-	const {token} = req.cookies;
-	if (token) {
-		jwt.verify(token, process.env.JWT_SECRET, {}, async (err, user) => {
-			if (err) throw err;
-			const profile = await UserModel.findOne({userId: user.id});
-			return res.json({user, profile});
-		});
-	} else return res.json(null);
+	try {
+		const {token} = req.cookies;
+		if (token) {
+			jwt.verify(token, process.env.JWT_SECRET, {}, async (err, user) => {
+				if (err) throw err;
+				const profile = await UserModel.findOne({userId: user.id});
+				return res.json({user, profile});
+			});
+		} else return res.json(null);
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 //user logout

@@ -42,13 +42,15 @@ const setNotifications = async (req, res) => {
 };
 
 const getNotificatons = async (req, res) => {
-	const id = req.params.id;
-	const notifi = await NotificationModel.findOne({authorId: id});
-	if (!notifi) return res.json({error: "something went wrong"});
-	return res.json(notifi);
+	try {
+		const id = req.params.id;
+		const notifi = await NotificationModel.findOne({authorId: id});
+		if (!notifi) return res.json({error: "something went wrong"});
+		return res.json(notifi);
+	} catch (err) {
+		console.log(err);
+	}
 };
-
-// 659e64fc1e64ed5727bcd553
 
 module.exports = {
 	setNotifications,
