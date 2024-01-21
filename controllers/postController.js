@@ -153,15 +153,13 @@ const getPostById = async (req, res) => {
 			const post = await PostModel.findOne({_id: postId});
 			const user = await UserModel.findOne({userId: post.userId});
 			const comment = await CommentModel.findOne({postId});
-			// if (!post) return res.json({error: "No post found with this id"});
-			// return res.json({post, user, comment});
+			if (!post) return res.json({error: "No post found with this id"});
+			return res.json({post, user, comment});
 		}
 	} catch (err) {
 		console.log(err);
 	}
 };
-
-
 
 module.exports = {
 	addPost,
