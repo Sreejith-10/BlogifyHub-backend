@@ -1,3 +1,4 @@
+const {default: mongoose} = require("mongoose");
 const alertUserLike = require("..");
 const CommentModel = require("../models/commentModel");
 const PostModel = require("../models/postModel");
@@ -148,14 +149,45 @@ const addViewer = async (req, res) => {
 
 const getPostById = async (req, res) => {
 	try {
-		const postId = req.params.id;
-		if (postId != undefined) {
-			const post = await PostModel.findOne({_id: postId});
-			const user = await UserModel.findOne({userId: post.userId});
-			const comment = await CommentModel.findOne({postId});
-			if (!post) return res.json({error: "No post found with this id"});
-			return res.json({post, user, comment});
-		}
+		const {postId, postTitle} = req.body;
+		const post = await PostModel.aggregate([
+			{
+				$match: {
+					_id: new mongoose.Types.ObjectId(postId),
+				},
+			},
+			{
+				$lookup: {
+					from: "users",
+					localField: "postLikes",
+					foreignField: "userId",
+					as: "likedUsers",
+				},
+			},
+			{
+				$lookup: {
+					from: "users",
+					localField: "postViews",
+					foreignField: "userId",
+					as: "postViewers",
+				},
+			},
+			{
+				$addFields: {
+					_u: {$toString: "$_id"},
+				},
+			},
+			{
+				$lookup: {
+					from: "comments",
+					localField: "_u",
+					foreignField: "postId",
+					as: "userComment",
+				},
+			},
+		]);
+		if (!post) return res.json({error: "No post found with this id"});
+		res.json(post);
 	} catch (err) {
 		console.log(err);
 	}
