@@ -1,9 +1,10 @@
+const {default: mongoose} = require("mongoose");
 const UserModel = require("../models/userModel");
 
 const addUser = async (req, res) => {
-	const filename = req.file.filename;
-	const {fname, lname, profession, age, userId} = req.body;
 	try {
+		const filename = req.file.filename;
+		const {fname, lname, profession, age, userId} = req.body;
 		const result = await UserModel.create({
 			userId,
 			profileImg: filename,
@@ -74,10 +75,37 @@ const updateUserAccount = async (req, res) => {
 	}
 };
 
+const getAllFollowers = async (req, res) => {
+	try {
+		const id = req.params.id;
+		const followers = await UserModel.aggregate([
+			{
+				$match: {
+					userId: id,
+				},
+			},
+			{
+				$lookup: {
+					from: "users",
+					localField: "followers",
+					foreignField: "userId",
+					as: "followersData",
+				},
+			},
+		]);
+		if (!followers)
+			return res.json({error: "Something went wrong"}).status(400);
+		return res.json(followers);
+	} catch (err) {
+		console.log(err);
+	}
+};
+
 module.exports = {
 	addUser,
 	getSingleUser,
 	followUser,
 	unFollowUser,
 	updateUserAccount,
+	getAllFollowers,
 };
