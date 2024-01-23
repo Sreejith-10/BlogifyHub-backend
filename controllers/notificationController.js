@@ -12,9 +12,9 @@ const setNotifications = async (req, res) => {
 		if (method === "like") {
 			Notification = `${user.fname} ${user.lname} liked your post`;
 		} else if (method === "comment") {
-			Notification = `${user.fname} ${user.lname} commented on your post`;
+			Notification = `${user?.fname} ${user?.lname} commented on your post`;
 		} else if (method === "reply") {
-			Notification = `${user.fname} ${user.lname} replied to your comment`;
+			Notification = `${user?.fname} ${user?.lname} replied to your comment`;
 		}
 		const result = await NotificationModel.findOne({authorId});
 		if (!result) {

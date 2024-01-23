@@ -25,7 +25,7 @@ router.post("/get-user-post", getUserPost);
 router.post("/like-post", updateLikecount);
 router.post("/dislike-post", reduceLikeCount);
 router.post("/get-post-byId", getPostById);
-router.patch("/update-post", upload.single("postImage"), updatePost);
+router.patch("/update-post", upload.single("editPostImage"), updatePost);
 router.delete("/delete-post/:id", deletePost);
 
 module.exports = router;

@@ -65,7 +65,7 @@ const updatePost = async (req, res) => {
 			postTitle: req.body.postTitle,
 			postDescription: req.body.postDescription,
 			postTags: req.body.tag,
-			postImage: req.body.postImage ? req.body.postImage : fileUpload.filename,
+			postImage: fileUpload && fileUpload.filename,
 			userId: req.body.userId,
 			postDate: new Date().toLocaleDateString(),
 		});
