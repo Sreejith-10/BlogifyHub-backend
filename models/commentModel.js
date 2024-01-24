@@ -15,7 +15,10 @@ const commentSchema = new mongoose.Schema(
 					type: String,
 				},
 				senderMessage: String,
-				time: Date,
+				time: {
+					type: Date,
+					default: Date.now(),
+				},
 				replies: [
 					{
 						author: {
@@ -26,7 +29,10 @@ const commentSchema = new mongoose.Schema(
 							type: String,
 						},
 						replierMessage: String,
-						time: Date,
+						time: {
+							type: Date,
+							default: Date.now(),
+						},
 					},
 				],
 			},

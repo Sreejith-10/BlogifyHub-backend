@@ -24,7 +24,6 @@ const setNotifications = async (req, res) => {
 					notificationType: method,
 					senderId: user.userId,
 					message: Notification,
-					date: new Date(),
 				},
 			});
 		} else {
@@ -32,7 +31,6 @@ const setNotifications = async (req, res) => {
 				notificationType: method,
 				senderId: user.userId,
 				message: Notification,
-				date: new Date(),
 			});
 			await result.save();
 		}
@@ -56,3 +54,4 @@ module.exports = {
 	setNotifications,
 	getNotificatons,
 };
+

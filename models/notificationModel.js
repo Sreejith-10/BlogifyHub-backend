@@ -2,7 +2,10 @@ const mongoose = require("mongoose");
 
 const subSchema = new mongoose.Schema({
 	notificationType: String,
-	date: String,
+	date: {
+		type: Date,
+		default: Date.now(),
+	},
 	message: String,
 	senderId: String,
 });

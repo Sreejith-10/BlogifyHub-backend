@@ -18,7 +18,10 @@ const postSchema = new mongoose.Schema({
 		required: true,
 	},
 	postLikes: [String],
-	postDate: String,
+	postDate: {
+		type:Date,
+		default:Date.now()
+	},
 	postViews: [String],
 });
 
