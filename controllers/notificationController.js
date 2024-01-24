@@ -8,7 +8,9 @@ const setNotifications = async (req, res) => {
 		const authorId =
 			method === "reply" ? postId : await PostModel.findOne({_id: postId});
 		const user = await UserModel.findOne({userId});
+
 		let Notification = "";
+
 		if (method === "like") {
 			Notification = `${user.fname} ${user.lname} liked your post`;
 		} else if (method === "comment") {
@@ -16,23 +18,39 @@ const setNotifications = async (req, res) => {
 		} else if (method === "reply") {
 			Notification = `${user?.fname} ${user?.lname} replied to your comment`;
 		}
-		const result = await NotificationModel.findOne({authorId});
+		const result = await NotificationModel.findOne({authorId: authorId.userId});
 		if (!result) {
 			await NotificationModel.create({
 				authorId: method === "reply" ? authorId : authorId.userId,
 				notifications: {
+					date: new Date().toISOString(),
 					notificationType: method,
 					senderId: user.userId,
 					message: Notification,
 				},
 			});
 		} else {
-			result.notifications.push({
-				notificationType: method,
-				senderId: user.userId,
-				message: Notification,
-			});
-			await result.save();
+			// console.log("test");
+			await NotificationModel.findOneAndUpdate(
+				{authorId},
+				{
+					$set: {
+						notifications: {
+							notificationType: method,
+							senderId: user.userId,
+							message: Notification,
+							date: new Date().toISOString(),
+						},
+					},
+				}
+			);
+			// result.notifications.set({
+			// 	notificationType: method,
+			// 	senderId: user.userId,
+			// 	message: Notification,
+			// 	date: new Date().toISOString(),
+			// });
+			// await result.save();
 		}
 	} catch (err) {
 		console.log(err);
@@ -54,4 +72,3 @@ module.exports = {
 	setNotifications,
 	getNotificatons,
 };
-

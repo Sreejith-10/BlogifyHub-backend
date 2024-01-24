@@ -15,6 +15,7 @@ const addPost = async (req, res) => {
 			postDescription,
 			postTags: tag,
 			postImage: f,
+			postDate: new Date().toISOString(),
 			userId,
 		});
 		await TagModel.insertMany({tagArray: tag});

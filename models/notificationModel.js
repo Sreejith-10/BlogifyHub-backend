@@ -4,7 +4,6 @@ const subSchema = new mongoose.Schema({
 	notificationType: String,
 	date: {
 		type: Date,
-		default: Date.now(),
 	},
 	message: String,
 	senderId: String,

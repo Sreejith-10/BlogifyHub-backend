@@ -18,6 +18,7 @@ const addComment = async (req, res) => {
 				comment: {
 					senderId: userId,
 					senderMessage: message,
+					time: new Date().toISOString(),
 				},
 			});
 			if (!createDb) return res.json({error: "Error try again"});
@@ -26,6 +27,7 @@ const addComment = async (req, res) => {
 			result.comment.push({
 				senderId: userId,
 				senderMessage: message,
+				time: new Date().toISOString(),
 			});
 			result.save();
 			if (!result) return res.json({error: "Error try again"});
@@ -81,6 +83,7 @@ const replyToComment = async (req, res) => {
 					"comment.$.replies": {
 						replierId: currentUser,
 						replierMessage: reply,
+						time: new Date().toISOString(),
 					},
 				},
 			},
