@@ -6,8 +6,12 @@ const setNotifications = async (req, res) => {
 	try {
 		const {postId, userId, method} = req;
 		const authorId =
-			method === "reply" ? postId : await PostModel.findOne({_id: postId});
+			method === "reply"
+				? postId
+				: await PostModel.findOne({_id: postId});
 		const user = await UserModel.findOne({userId});
+
+		console.log(authorId);
 
 		let Notification = "";
 
@@ -17,6 +21,8 @@ const setNotifications = async (req, res) => {
 			Notification = `${user?.fname} ${user?.lname} commented on your post`;
 		} else if (method === "reply") {
 			Notification = `${user?.fname} ${user?.lname} replied to your comment`;
+		} else if (method === "follow") {
+			Notification = `${user?.fname} ${user?.lname} started following you`;
 		}
 		const result = await NotificationModel.findOne({authorId: authorId.userId});
 		if (!result) {

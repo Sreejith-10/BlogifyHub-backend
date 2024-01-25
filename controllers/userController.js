@@ -1,5 +1,6 @@
 const {default: mongoose} = require("mongoose");
 const UserModel = require("../models/userModel");
+const {setNotifications} = require("./notificationController");
 
 const addUser = async (req, res) => {
 	try {
@@ -35,6 +36,8 @@ const followUser = async (req, res) => {
 		const result = await UserModel.findOne({userId: authorId});
 		result.followers.push(userId);
 		result.save();
+		//postId, userId, method
+		// setNotifications(authorId, userId, "follow");
 		res.json(result);
 	} catch (err) {
 		console.log(err);
