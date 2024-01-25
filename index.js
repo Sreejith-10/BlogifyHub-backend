@@ -31,7 +31,7 @@ app.use(express.static("./public"));
 //mongo connection
 mongoose
 	.connect(
-		"mongodb+srv://sreejithsree956266:sreejith10@cluster0.f73be4d.mongodb.net/blog?retryWrites=true&w=majority"
+		"mongodb+srv://User1:user1@cluster0.f73be4d.mongodb.net/blog?retryWrites=true&w=majority"
 	)
 	.then(() => console.log("connected to db"))
 	.catch((err) => console.log(err));
