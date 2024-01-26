@@ -19,7 +19,7 @@ const server = createServer(app);
 //middleware
 app.use(
 	cors({
-		origin: process.env.FRONT_END || "http://localhost:5173",
+		origin: process.env.FRONT_END,
 		credentials: true,
 	})
 );
@@ -30,7 +30,7 @@ app.use(express.static("./public"));
 
 //mongo connection
 mongoose
-	.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/blog")
+	.connect(process.env.MONGO_URI)
 	.then(() => console.log("connected to db"))
 	.catch((err) => console.log(err));
 
