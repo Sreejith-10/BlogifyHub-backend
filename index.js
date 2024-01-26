@@ -30,10 +30,7 @@ app.use(express.static("./public"));
 
 //mongo connection
 mongoose
-	.connect(
-		"mongodb+srv://User1:user1@cluster0.f73be4d.mongodb.net/blog?retryWrites=true&w=majority" ||
-			"mongodb://127.0.0.1:27017/blog"
-	)
+	.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/blog")
 	.then(() => console.log("connected to db"))
 	.catch((err) => console.log(err));
 
