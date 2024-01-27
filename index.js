@@ -35,7 +35,7 @@ mongoose
 	.catch((err) => console.log(err));
 
 //socket.io
-// intializeSocket(server);
+intializeSocket(server);
 
 //route
 app.use("/", authRoute);
