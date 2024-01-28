@@ -18,7 +18,7 @@ const server = createServer(app);
 
 //middleware
 const corsOptions = {
-	origin: "http://localhost:5173",
+	origin: "https://blogify-hub-frontend.vercel.app",
 	credentials: true,
 	methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
