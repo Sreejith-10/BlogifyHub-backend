@@ -19,7 +19,7 @@ const server = createServer(app);
 //middleware
 app.use(
 	cors({
-		origin: process.env.FRONT_END,
+		origin: "https://blogify-hub-frontend.vercel.app/",
 		credentials: true,
 		methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 	})
