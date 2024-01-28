@@ -3,7 +3,9 @@ const socketIO = require("socket.io");
 const intializeSocket = (server) => {
 	const io = new socketIO.Server(server, {
 		cors: {
-			origin: process.env.FRONT_END,
+			origin:
+				// "http://localhost:5173" ||
+				"https://blogify-hub-frontend.vercel.app",
 			methods: ["GET", "POST"],
 		},
 	});

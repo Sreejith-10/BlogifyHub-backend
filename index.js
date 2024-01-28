@@ -18,7 +18,9 @@ const server = createServer(app);
 
 //middleware
 const corsOptions = {
-	origin: "https://blogify-hub-frontend.vercel.app",
+	origin:
+		// "http://localhost:5173" ||
+		"https://blogify-hub-frontend.vercel.app",
 	credentials: true,
 	methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
@@ -32,7 +34,10 @@ app.use(express.static("./public"));
 
 //mongo connection
 mongoose
-	.connect(process.env.MONGO_URI)
+	.connect(
+		// "mongodb://127.0.0.1:27017/blog" ||
+		process.env.MONGO_URI
+	)
 	.then(() => console.log("connected to db"))
 	.catch((err) => console.log(err));
 
