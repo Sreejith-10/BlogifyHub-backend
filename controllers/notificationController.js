@@ -11,12 +11,10 @@ const setNotifications = async (req, res) => {
 				: await PostModel.findOne({_id: postId});
 		const user = await UserModel.findOne({userId});
 
-		console.log(authorId);
-
 		let Notification = "";
 
 		if (method === "like") {
-			Notification = `${user.fname} ${user.lname} liked your post`;
+			Notification = `${user?.fname} ${user?.lname} liked your post`;
 		} else if (method === "comment") {
 			Notification = `${user?.fname} ${user?.lname} commented on your post`;
 		} else if (method === "reply") {

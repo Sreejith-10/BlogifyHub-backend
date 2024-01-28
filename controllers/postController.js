@@ -80,8 +80,6 @@ const updateLikecount = async (req, res) => {
 		const post = await PostModel.findById(postId);
 		post.postLikes.push(userId);
 		post.save();
-		const author = await PostModel.findById(postId);
-		const user = await UserModel.findOne({userId});
 		if (post) {
 			setNotifications({postId, userId, method: "like"});
 			return res.json(post);
