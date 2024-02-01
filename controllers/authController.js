@@ -50,10 +50,12 @@ const logInUser = async (req, res) => {
 			jwt.sign(
 				{email: user.email, id: user._id, name: user.name},
 				process.env.JWT_SECRET,
-				{},
+				{expiresIn: "1h", sameSite: "None", secure: true},
 				(err, token) => {
 					if (err) throw err;
-					res.cookie("token", token).json({user, ok: userAccoutOk});
+					res
+						.cookie("token", token, {httpOnly: true})
+						.json({user, ok: userAccoutOk});
 				}
 			);
 		}
