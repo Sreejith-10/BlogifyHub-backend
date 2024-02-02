@@ -1,20 +1,26 @@
 const {default: mongoose} = require("mongoose");
 const UserModel = require("../models/userModel");
 const {setNotifications} = require("./notificationController");
+const cloudinaryImageUploader = require("../helper/cloudinary");
 
 const addUser = async (req, res) => {
 	try {
-		const filename = req.file.filename;
 		const {fname, lname, profession, age, userId} = req.body;
-		const result = await UserModel.create({
-			userId,
-			profileImg: filename,
-			fname,
-			lname,
-			profession,
-			age,
-		});
-		if (result) return res.json("Success");
+		const filename = req.file;
+		const imgUrl = await cloudinaryImageUploader(filename);
+		if (imgUrl) {
+			const result = await UserModel.create({
+				userId,
+				profileImg: imgUrl.url,
+				fname,
+				lname,
+				profession,
+				age,
+			});
+			if (result) return res.json("Success");
+		} else {
+			return res.json({error: "Could not upload image"});
+		}
 	} catch (err) {
 		console.log(err);
 	}
@@ -61,12 +67,19 @@ const unFollowUser = async (req, res) => {
 const updateUserAccount = async (req, res) => {
 	try {
 		const file = req.file;
-		const {fname, lname, age, profession} = req.body;
-		if (file) {
+		const fname = req.body.fname[0];
+		const lname = req.body.lname[0];
+		const age = req.body.age[0];
+		const profession = req.body.profession[0];
+		const imgUrl = await cloudinaryImageUploader(file);
+		console.log(imgUrl);
+		if (imgUrl) {
 			await UserModel.findOneAndUpdate(
 				{userId: req.body.userId},
-				{profileImg: file.filename}
+				{profileImg: imgUrl.url}
 			);
+		} else {
+			req.json({error: "Falied to update image"});
 		}
 		const db = await UserModel.findOneAndUpdate(
 			{userId: req.body.userId},

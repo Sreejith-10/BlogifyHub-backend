@@ -1,27 +1,34 @@
 const {default: mongoose} = require("mongoose");
 const alertUserLike = require("..");
-const CommentModel = require("../models/commentModel");
 const PostModel = require("../models/postModel");
 const TagModel = require("../models/tagModel");
-const UserModel = require("../models/userModel");
 const {setNotifications} = require("./notificationController");
+const cloudinaryImageUploader = require("../helper/cloudinary");
 
 const addPost = async (req, res) => {
 	try {
-		const f = req.file.filename;
-		const {postTitle, postDescription, tag, userId} = req.body;
-		const postResult = await PostModel.create({
-			postTitle,
-			postDescription,
-			postTags: tag,
-			postImage: f,
-			postDate: new Date().toISOString(),
-			userId,
-		});
-		await TagModel.insertMany({tagArray: tag});
-		postResult
-			? res.json("Succerfully posted")
-			: res.json({error: "Something went wrong"});
+		const file = req.file;
+		const postTitle = req.body.postTitle[0];
+		const postDescription = req.body.postDescription[0];
+		const tags = JSON.parse(req.body.tags[0]);
+		const userId = req.body.userId[0];
+		const imgUrl = await cloudinaryImageUploader(file);
+		if (imgUrl) {
+			const postResult = await PostModel.create({
+				postTitle,
+				postDescription,
+				postTags: tags,
+				postImage: imgUrl.url,
+				postDate: new Date().toISOString(),
+				userId,
+			});
+			await TagModel.insertMany({tagArray: tags});
+			postResult
+				? res.json("Succerfully posted")
+				: res.json({error: "Something went wrong"});
+		} else {
+			return res.json({error: "Image upload failed"});
+		}
 	} catch (err) {
 		console.log(err);
 	}
@@ -61,14 +68,31 @@ const deletePost = async (req, res) => {
 const updatePost = async (req, res) => {
 	try {
 		const fileUpload = req.file;
-		const result = await PostModel.findByIdAndUpdate(req.body.postId, {
-			postTitle: req.body.postTitle,
-			postDescription: req.body.postDescription,
-			postTags: req.body.tag,
-			postImage: fileUpload && fileUpload.filename,
-			userId: req.body.userId,
-		});
-		if (result) return res.json("Updated");
+		if (fileUpload) {
+			const imgUrl = await cloudinaryImageUploader(fileUpload);
+			if (imgUrl) {
+				const result = await PostModel.findByIdAndUpdate(req.body.postId, {
+					postTitle: req.body.postTitle && req.body.postTitle[0],
+					postDescription:
+						req.body.postDescription && req.body.postDescription[0],
+					postTags: req.body.tag && req.body.tag[0],
+					postImage: imgUrl.url,
+					userId: req.body.userId && req.body.userId[0],
+				});
+				if (result) return res.json("Updated");
+			} else {
+				res.json({error: "Something went wrong"});
+			}
+		} else {
+			const result = await PostModel.findByIdAndUpdate(req.body.postId, {
+				postTitle: req.body.postTitle && req.body.postTitle[0],
+				postDescription:
+					req.body.postDescription && req.body.postDescription[0],
+				postTags: req.body.tag && req.body.tag[0],
+				userId: req.body.userId && req.body.userId[0],
+			});
+			if (result) return res.json("Updated");
+		}
 	} catch (err) {
 		console.log(err);
 	}

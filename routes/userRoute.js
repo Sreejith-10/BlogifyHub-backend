@@ -7,15 +7,15 @@ const {
 	updateUserAccount,
 	getAllFollowers,
 } = require("../controllers/userController");
-const upload = require("../middleware/multer");
+const parseForm = require("../middlewares/formParser");
 
 const router = express.Router();
 
 router.get("/get-user/:id", getSingleUser);
 router.get("/get-followers/:id", getAllFollowers);
-router.post("/add", upload.single("img"), addUser);
+router.post("/add", parseForm, addUser);
 router.post("/follow-user", followUser);
 router.post("/unfollow-user", unFollowUser);
-router.patch("/update-user", upload.single("profileImage"), updateUserAccount);
+router.patch("/update-user", parseForm, updateUserAccount);
 
 module.exports = router;

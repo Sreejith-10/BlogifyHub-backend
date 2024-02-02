@@ -1,28 +1,31 @@
 const mongoose = require("mongoose");
 
-const postSchema = new mongoose.Schema({
-	userId: {
-		type: String,
-		required: true,
+const postSchema = new mongoose.Schema(
+	{
+		userId: {
+			type: String,
+			required: true,
+		},
+		postImage: {
+			type: String,
+		},
+		postTitle: {
+			type: String,
+			required: true,
+		},
+		postTags: [],
+		postDescription: {
+			type: String,
+			required: true,
+		},
+		postLikes: [String],
+		postDate: {
+			type: Date,
+		},
+		postViews: [String],
 	},
-	postImage: {
-		type: String,
-	},
-	postTitle: {
-		type: String,
-		required: true,
-	},
-	postTags: [String],
-	postDescription: {
-		type: String,
-		required: true,
-	},
-	postLikes: [String],
-	postDate: {
-		type:Date,
-	},
-	postViews: [String],
-});
+	{versionKey: false}
+);
 
 const PostModel = mongoose.model("post", postSchema);
 

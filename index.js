@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 const cookieParser = require("cookie-parser");
 const {createServer} = require("http");
-
 const authRoute = require("./routes/authRoute");
 const userRoute = require("./routes/userRoute");
 const postRoute = require("./routes/postRoute");
@@ -12,6 +11,7 @@ const commentRoute = require("./routes/commentRoute");
 const tagRoute = require("./routes/tagRoute");
 const notificationRoute = require("./routes/notificationRoute");
 const intializeSocket = require("./socket");
+const bodyParser = require("body-parser");
 
 const app = express();
 const server = createServer(app);
@@ -19,18 +19,18 @@ const server = createServer(app);
 //middleware
 const corsOptions = {
 	origin:
-		// "http://localhost:5173" ||
+		//  "http://localhost:5173" ||
 		"https://blogify-hub-frontend.vercel.app",
 	credentials: true,
 	methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 
 app.use(cors(corsOptions));
-
-app.use(express.json());
-app.use(express.urlencoded({extended: false}));
+app.use(bodyParser.json());
+// app.use(express.json());
+// app.use(express.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(express.static("./public"));
 
 //mongo connection
 mongoose
