@@ -15,6 +15,8 @@ const parseForm = (req, res, next) => {
 			? files.editPostImage[0]._writeStream.path
 			: files.profileImage
 			? files.profileImage[0]._writeStream.path
+			: files.img
+			? files.img[0]
 			: null;
 		next();
 	});

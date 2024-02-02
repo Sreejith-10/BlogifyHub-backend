@@ -5,8 +5,11 @@ const cloudinaryImageUploader = require("../helper/cloudinary");
 
 const addUser = async (req, res) => {
 	try {
-		const {fname, lname, profession, age, userId} = req.body;
 		const filename = req.file;
+		const fname = req.body.fname[0];
+		const lname = req.body.lname[0];
+		const profession = req.body.profession[0];
+		const age = req.body.age[0];
 		const imgUrl = await cloudinaryImageUploader(filename);
 		if (imgUrl) {
 			const result = await UserModel.create({
