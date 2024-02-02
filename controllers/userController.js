@@ -72,7 +72,6 @@ const updateUserAccount = async (req, res) => {
 		const age = req.body.age[0];
 		const profession = req.body.profession[0];
 		const imgUrl = await cloudinaryImageUploader(file);
-		console.log(imgUrl);
 		if (imgUrl) {
 			await UserModel.findOneAndUpdate(
 				{userId: req.body.userId},
