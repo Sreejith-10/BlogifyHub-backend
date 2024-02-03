@@ -10,7 +10,7 @@ const parseForm = (req, res, next) => {
 		}
 		req.body = fields;
 		req.file = files.postImage
-			? files.postImage[0]
+			? files.postImage[0]._writeStream.path
 			: files.editPostImage
 			? files.editPostImage[0]._writeStream.path
 			: files.profileImage

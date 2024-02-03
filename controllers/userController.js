@@ -46,7 +46,7 @@ const followUser = async (req, res) => {
 		result.followers.push(userId);
 		result.save();
 		//postId, userId, method
-		// setNotifications(authorId, userId, "follow");
+		setNotifications(authorId, userId, "follow");
 		res.json(result);
 	} catch (err) {
 		console.log(err);
