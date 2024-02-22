@@ -52,5 +52,5 @@ app.use("/tag", tagRoute);
 app.use("/notification", notificationRoute);
 
 server.listen(3001, () => {
-	console.log("Server started");
+	console.log("Server Started on 3001");
 });
