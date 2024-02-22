@@ -34,7 +34,6 @@ const setNotifications = async (req, res) => {
 				},
 			});
 		} else {
-			// console.log("test");
 			await NotificationModel.findOneAndUpdate(
 				{authorId},
 				{

@@ -4,8 +4,8 @@ const intializeSocket = (server) => {
 	const io = new socketIO.Server(server, {
 		cors: {
 			origin:
-				// "http://localhost:5173" ||
-				"https://blogify-hub-frontend.vercel.app",
+				//  "http://localhost:5173" ||
+				process.env.FRONT_END,
 			methods: ["GET", "POST"],
 		},
 	});

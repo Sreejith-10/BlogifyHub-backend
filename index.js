@@ -19,16 +19,15 @@ const server = createServer(app);
 //middleware
 const corsOptions = {
 	origin:
-		//  "http://localhost:5173" ||
-		"https://blogify-hub-frontend.vercel.app",
+		// "http://localhost:5173" ||
+		process.env.FRONT_END,
 	credentials: true,
 	methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
 };
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
-// app.use(express.json());
-// app.use(express.urlencoded({extended: true}));
+
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
