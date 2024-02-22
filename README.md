@@ -10,19 +10,14 @@ about
 # Blogifyhub Backend 
 
 Tech stack
-Back end is build with Express a node js framework.
+- Node JS
+- Express
+- MongoDB
+- Mongoose
+- JWT
 
-node js : - node js is a run time for the javascript in the browser
-
-express :- it is a bakend framework build on top of nodejs. it is a very powerfull and strong framework
-
-mongodb :- Moongodb is a noSQL type database.
 ## Demo
-
-mongoose :- It acts like a wrapper on top of mongodb and make easier interactions between server and database
 https://blogify-hub-frontend.vercel.app/
-
-JWT ;- Json Web Token is a popular package for creating authentication and authorization.
 
 This is the backend section of the blogify hub.
 ## Features
