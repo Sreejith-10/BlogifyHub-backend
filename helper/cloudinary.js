@@ -1,7 +1,7 @@
-const cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary").v2;
 const dotenv = require("dotenv").config();
 
-cloudinary.v2.config({
+cloudinary.config({
 	cloud_name: process.env.CLOUD_NAME,
 	api_key: process.env.CLOUD_KEY,
 	api_secret: process.env.API_SECRET,
@@ -13,12 +13,11 @@ const cloudinaryImageUploader = async (file) => {
 	await cloudinary.uploader
 		.upload(file)
 		.then((result) => {
-			return (data = result);
+			data = result;
 		})
 		.catch((err) => {
-			return (data = err);
+			data = err;
 		});
-
 	return data;
 };
 

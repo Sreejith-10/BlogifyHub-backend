@@ -11,7 +11,8 @@ const addUser = async (req, res) => {
 		const lname = req.body.lname[0];
 		const profession = req.body.profession[0];
 		const age = req.body.age[0];
-		const imgUrl = await cloudinaryImageUploader(filename.filepath);
+		const file = filename.filepath;
+		const imgUrl = await cloudinaryImageUploader(file);
 		if (imgUrl) {
 			const result = await UserModel.create({
 				userId,
@@ -70,11 +71,12 @@ const unFollowUser = async (req, res) => {
 
 const updateUserAccount = async (req, res) => {
 	try {
-		const file = req.file;
+		const filename = req.file;
 		const fname = req.body.fname[0];
 		const lname = req.body.lname[0];
 		const age = req.body.age[0];
 		const profession = req.body.profession[0];
+		const file = filename.filepath;
 		const imgUrl = await cloudinaryImageUploader(file);
 		if (imgUrl) {
 			await UserModel.findOneAndUpdate(
