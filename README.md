@@ -29,15 +29,6 @@ This is the backend section of the blogify hub.
 - Token based authentication
 
 
-## Tech Stack
-
-**Client:** React, Typescript ,Redux, Tailwind CSS, Framer motion, Socket io 
-
-**Server:** Node, Express, Mongoose, JWT
-
-**Database:** MongoDB 
-
-
 ## Frontend 
 
 https://github.com/Sreejith-10/BlogifyHub-frontend
